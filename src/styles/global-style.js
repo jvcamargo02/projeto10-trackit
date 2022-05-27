@@ -65,6 +65,7 @@ input{
 
 ::placeholder{
 	color: #dbdbdb;
+	font-size: 19px;
 }
 
 :root{
