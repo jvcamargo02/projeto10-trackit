@@ -1,19 +1,15 @@
 import styled from "styled-components"
 import Header from "./Header"
 import { useState } from 'react'
+import ButtonDay from "./ButtonDay"
 
 export default function HabitsScreen() {
 
     const [toggle, setToggle] = useState(true)
-    const [btnColor, setBtnColor] = useState("#fff")
-    let days = []
+    const [selectDay, setSelectDay] = useState([])
+    const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
-    function newHabitDays (v) {
-        days.push(v)
-        setBtnColor(!btnColor)
-
-    }
-
+    console.log(selectDay)
     function onSubmit(e) {
         e.preventDefault()
     }
@@ -30,13 +26,8 @@ export default function HabitsScreen() {
                 <form onSubmit={onSubmit}>
                     <input type='text' placeholder='Nome do hábito' />
                     <Buttons>
-                        <button color={btnColor} onClick={() => newHabitDays(0)}>D</button>
-                        <button color={btnColor} onClick={() => newHabitDays(1)}>S</button>
-                        <button color={btnColor} onClick={() => newHabitDays(2)}>T</button>
-                        <button color={btnColor} onClick={() => newHabitDays(3)}>Q</button>
-                        <button color={btnColor} onClick={() => newHabitDays(4)}>Q</button>
-                        <button color={btnColor} onClick={() => newHabitDays(5)}>S</button>
-                        <button color={btnColor} onClick={() => newHabitDays(6)}>S</button>
+                        {weekDays.map((day, index) =>
+                            <ButtonDay key={index} day={day} index={index} selectDay={selectDay} setSelectDay={setSelectDay}/>)}
                     </Buttons>
                     <span>
                         <a onClick={() => setToggle(!toggle)}>Cancelar</a>
@@ -134,14 +125,5 @@ const Buttons = styled.div`
     margin: 8px auto 30px auto;
     display: flex;
     gap: 5px;
-
-    button{
-        width: 1.875rem;
-        height: 1.875rem;
-        border: 1px solid var(--border-color);
-        background-color: ${props => props.children[0].props.color};
-        border-radius: 5px;
-        cursor: pointer;
-    }
 
 `
