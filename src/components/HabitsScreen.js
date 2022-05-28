@@ -2,6 +2,7 @@ import styled from "styled-components"
 import Header from "./Header"
 import { useState } from 'react'
 import ButtonDay from "./ButtonDay"
+import Footer from "./Footer"
 
 export default function HabitsScreen() {
 
@@ -19,7 +20,7 @@ export default function HabitsScreen() {
             <Header />
             <MainTop>
                 <h3>Meus Hábitos</h3>
-                <ion-icon name={toggle === true ? "add-circle-sharp" : "close-circle-sharp"} onClick={() => setToggle(!toggle)} ></ion-icon>
+                <ion-icon name={toggle === true ? "add-circle-sharp" : "close-circle-sharp"} onClick={() => { setToggle(!toggle); setSelectDay([]) }} ></ion-icon>
             </MainTop>
             {toggle === true ? null :
 
@@ -27,7 +28,7 @@ export default function HabitsScreen() {
                     <input type='text' placeholder='Nome do hábito' />
                     <Buttons>
                         {weekDays.map((day, index) =>
-                            <ButtonDay key={index} day={day} index={index} selectDay={selectDay} setSelectDay={setSelectDay}/>)}
+                            <ButtonDay key={index} day={day} index={index} selectDay={selectDay} setSelectDay={setSelectDay} />)}
                     </Buttons>
                     <span>
                         <a onClick={() => setToggle(!toggle)}>Cancelar</a>
@@ -37,7 +38,7 @@ export default function HabitsScreen() {
 
             }
             <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
-
+            <Footer />
         </Container>
     )
 }

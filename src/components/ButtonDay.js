@@ -5,19 +5,19 @@ export default function ButtonDay({ day, index, selectDay, setSelectDay }) {
 
     const [btnColor, setBtnColor] = useState("#fff");
 
-    function filterSelectSeat (value){
+    function filterSelectSeat(value) {
 
-        if(value !== index && value === 0){
+        if (value !== index && value === 0) {
             return !value
         }
-         else if(value !== index){
-        return value
+        else if (value !== index) {
+            return value
         }
     }
 
 
     function newHabitDays(index) {
-        if(btnColor === "#fff"){
+        if (btnColor === "#fff") {
             setBtnColor("var(--border-color)")
             setSelectDay([...selectDay, index])
         } else {

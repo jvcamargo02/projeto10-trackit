@@ -23,6 +23,7 @@ const Container = styled.div`
     justify-content: space-between;
     position: fixed;
     top: 0; right: 0; left: 0;
+    z-index: 1;
     box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.3);
 
 
