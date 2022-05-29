@@ -75,6 +75,9 @@ input{
 	--check-color: #8fc549;
 	--border-color: #d4d4d4;
 	--background-color: #e5e5e5;
+	--ion-color-secondary: #8FC549;
+	--ion-color-primary: #d4d4d4;
+;
 }
 
 `

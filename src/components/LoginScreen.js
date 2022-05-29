@@ -1,12 +1,49 @@
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-
+import { useContext, useState } from 'react'
+import { ThreeDots } from  'react-loader-spinner'
+import UserContext from '../contexts/UserContext'
+import axios from 'axios'
 
 export default function LoginScreen() {
 
+    const {token, setToken} = useContext(UserContext)
+    const navigate = useNavigate()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [disable, setDisable] = useState("")
+    const [opacity, setOpacity] = useState('100%')
+    const [button, setButton] = useState('Entrar')
+
+    function success ({data}){
+        setToken(data.token)
+        navigate('/hoje', { replace: true })
+    }
+
+
+    function error (e){
+        console.log(e)
+        setDisable('')
+        setButton("Cadastrar")
+        setOpacity("100%")
+        alert("Ops! Houve um erro aqui. Que tal tentar novamente?") 
+    }
+
     function onSubmit(e) {
         e.preventDefault()
+        setDisable("disabled")
+        setButton(<ThreeDots color="#FFF" height={50} width={50}/>)
+        setOpacity('50%')
+        const data = {
+            email,
+            password
+        }
+        
+        const promisse = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', data)
+        promisse.then((value) => success(value))
+        promisse.catch((err) => error(err))
+
     }
 
     return (
@@ -14,13 +51,11 @@ export default function LoginScreen() {
             <img src={logo} alt="Logo" />
             <h1>TrackIt</h1>
             <form onSubmit={onSubmit}>
-                <input id='email' type='text' placeholder='Email' />
-                <input id='password' type='password' placeholder='Senha' />
-                <button type='submit'>
-                    <Link to="/habitos">
-                        <h4>Entrar</h4>
-                    </Link>
-                </button>
+                <input required disabled={disable} onChange={(e) => setEmail(e.target.value)} value={email} id='email' type='text' placeholder='Email' />
+                <input required disabled={disable} onChange={(e) => setPassword(e.target.value)} value={password} id='password' type='password' placeholder='Senha' />
+                <Button opacity={opacity}>
+                    <button disabled={disable} type='submit'>{button}</button>
+                </Button>
             </form>
             <Link to="/cadastro">
                 <h6>Não tem uma conta? Cadastre-se</h6>
@@ -77,15 +112,18 @@ const Container = styled.div`
     button{
         background-color: var(--buttons-color);
         border: none;
-    }
-
-    h4{
         color: #fff;
-        text-decoration: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     h6{
         color: var(--header-color);
         text-decoration: underline;
     }
+`
+const Button = styled.div`
+    opacity: ${props =>  props.opacity};
 `

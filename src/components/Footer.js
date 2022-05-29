@@ -47,7 +47,7 @@ const Container = styled.div`
         margin-bottom: 25px;
         width: 91px;
         height: 91px;
-    }
+        }
     }
 
     
