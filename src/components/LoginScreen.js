@@ -8,7 +8,8 @@ import axios from 'axios'
 
 export default function LoginScreen() {
 
-    const {token, setToken} = useContext(UserContext)
+    const {setToken} = useContext(UserContext)
+    const {setPhoto} = useContext(UserContext)
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -18,6 +19,7 @@ export default function LoginScreen() {
 
     function success ({data}){
         setToken(data.token)
+        setPhoto(data.image)
         navigate('/hoje', { replace: true })
     }
 

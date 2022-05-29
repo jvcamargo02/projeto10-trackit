@@ -7,45 +7,45 @@ import UserContext from "../contexts/UserContext";
 import Footer from "./Footer";
 import Header from "./Header";
 
-export default function TodayScreen(){
+export default function TodayScreen() {
 
-    const {token, setToken} = useContext(UserContext)
-    const [habits, setHabit] = useState([{
-        id:1,
-        name: "Ler 1 capítulo de livro",
-        done: true,
-        currentSequence: 1,
-        highestSequence:1
-    }])
-    const par = dayjs().locale('pt-br').format("dddd, DD/MM");
-    
+    const { token } = useContext(UserContext)
+    const [habits, setHabits] = useState([])
+    const day = dayjs().locale('pt-br').format("dddd, DD/MM");
+
+    console.log(token)
+    console.log(habits)
+
     const config = {
-	headers: {
-		"Authorization": `Bearer ${token}`
-	}}
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }
 
     useEffect(() => {
-        const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
-        promisse.then(response => console.log(response))
-    }, [])
+        const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config)
+        promisse.then(response => setHabits(response.data))
+    }, []) 
 
-    return(
+    return (
         <Container>
-        <Header />
-        <h1>{par.charAt(0).toUpperCase() + par.slice(1)}</h1>
-        <p>Nenhum hábito concluído ainda</p>
-        <Habits>
-            {habits.map((habit) => 
-            
-            <Habit>
-                <ion-icon color="primary" name="checkmark-circle"></ion-icon>
-                <h4>{habit.name}</h4>
-                <span>Sequência atual: {habit.currentSequence} dias</span><br/>
-                <span>Seu recorde: {habit.highestSequence} dias</span>
-            </Habit>)}
-            
-        </Habits>
-        <Footer />
+            <Header />
+            <h1>{day.charAt(0).toUpperCase() + day.slice(1)}</h1>
+            <p>Nenhum hábito concluído ainda</p>
+            <Habits>
+                {habits.length === 0 ? <h4>Nenhum hábito para hoje</h4> :
+
+                    habits.map((habit, index) =>
+
+                        <Habit key={index}>
+                            <ion-icon color="primary" name="checkmark-circle"></ion-icon>
+                            <h4>{habit.name}</h4>
+                            <span>Sequência atual: {habit.currentSequence} dias</span><br />
+                            <span>Seu recorde: {habit.highestSequence} dias</span>
+                        </Habit>)}
+
+            </Habits>
+            <Footer />
         </Container>
     )
 }
@@ -58,6 +58,7 @@ const Container = styled.div`
     height: 100vh;
     color: rgba(0, 0, 0, 0.6);
     font-size: 1.125rem;
+    overflow: auto;
     
     h1{
         color: var(--header-color);

@@ -11,13 +11,13 @@ import UserContext from "../contexts/UserContext";
 export default function App (){
 
     const [token, setToken] = useState("")
-    const [password, setPassword] = useState("")
+    const [photo, setPhoto] = useState("")
 
     return(
         <>
         <GlobalStyle />
         <BrowserRouter>
-        <UserContext.Provider value={{token, setToken}}>
+        <UserContext.Provider value={{token, setToken, photo, setPhoto}}>
         <Routes>
             <Route path='/' element={<LoginScreen />}/>
             <Route path='/cadastro' element={<RegisterScreen />} />

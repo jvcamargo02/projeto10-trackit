@@ -1,25 +1,81 @@
 import styled from "styled-components"
 import Header from "./Header"
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import ButtonDay from "./ButtonDay"
 import Footer from "./Footer"
+import { ThreeDots } from 'react-loader-spinner'
+import axios from "axios"
+import UserContext from "../contexts/UserContext"
+
 
 export default function HabitsScreen() {
 
+    const { token } = useContext(UserContext)
     const [toggle, setToggle] = useState(true)
     const [selectDay, setSelectDay] = useState([])
+    const [newHabit, setNewHabit] = useState('')
+    const [disable, setDisable] = useState("")
+    const [opacity, setOpacity] = useState('100%')
+    const [button, setButton] = useState('Salvar')
+    const [habitos, setHabitos] = useState([])
     const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
-    const habitos = [{
-        id: 1,
-        name: "Ler 1 capítulo de livro",
-        days: [1, 3, 5]
-    }, {id: 1,
-    name: "Ler 1 capítulo de livro",
-    days: [1, 3, 4]}]
 
-    console.log(selectDay)
-    function onSubmit(e) {
-        e.preventDefault()
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }
+
+    console.log(habitos)
+
+    useEffect(() => {
+        const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
+        promisse.then(response => setHabitos(response.data))
+    }, []) 
+
+    function closeNewHabitBox() {
+
+        setToggle(!toggle)
+        setSelectDay([])
+        setNewHabit("")
+    }
+
+    function success() {
+        setDisable("")
+        setOpacity("100%")
+        setButton("Salvar")
+        closeNewHabitBox()
+    }
+
+    function error(err) {
+        setDisable("")
+        setOpacity("100%")
+        setButton("Salvar")
+        alert(err.message)
+    }
+
+
+    function onSubmitForm() {
+        setDisable("disabled")
+        setOpacity("50%")
+        setButton(<ThreeDots color="#FFF" height={20} width={45} />)
+
+
+        if (selectDay.length !== 0 && newHabit !== '') {
+            const data = {
+                name: newHabit,
+                days: selectDay
+            }
+
+            const promisse = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", data, config)
+            promisse.then(success)
+            promisse.catch(error)
+
+        } else {
+            setDisable('')
+            alert("Ops 🤭. Teve um erro ao validar seus dados. Confira se você escolheu um nome e ao menos um dia para seu novo hábito. Que tal tentar novamente?")
+        }
+
     }
 
     return (
@@ -27,42 +83,44 @@ export default function HabitsScreen() {
             <Header />
             <MainTop>
                 <h3>Meus Hábitos</h3>
-                <ion-icon name={toggle === true ? "add-circle-sharp" : "close-circle-sharp"} onClick={() => { setToggle(!toggle); setSelectDay([]) }} ></ion-icon>
+                <ion-icon name={toggle === true ? "add-circle-sharp" : "close-circle-sharp"} onClick={disable === '' ? closeNewHabitBox : null}></ion-icon>
             </MainTop>
             {toggle === true ? null :
-            <Box>
-                <form onSubmit={onSubmit}>
-                    <input type='text' placeholder='Nome do hábito' />
-                    <Buttons>
-                        {weekDays.map((day, index) =>
-                            <ButtonDay key={index} day={day} index={index} selectDay={selectDay} setSelectDay={setSelectDay} />)}
-                    </Buttons>
-                    <span>
-                        <a onClick={() => setToggle(!toggle)}>Cancelar</a>
-                        <button>Salvar</button>
-                    </span>
-                </form>
-            </Box>
+                <Box>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        <input disabled={disable} required onChange={(e) => setNewHabit(e.target.value)} value={newHabit} type='text' placeholder='Nome do hábito' />
+                        <Buttons disabled>
+                            {weekDays.map((day, index) =>
+                                <ButtonDay key={index} day={day} index={index} selectDay={selectDay} setSelectDay={setSelectDay} disable={disable} />)}
+                        </Buttons>
+                        <span>
+                            <a onClick={disable === '' ? () => setToggle(!toggle) : null}>Cancelar</a>
+                            <Button opacity={opacity}>
+                                <button onClick={onSubmitForm} disabled={disable} type='submit'>{button}</button>
+                            </Button>
+                        </span>
+                    </form>
+                </Box>
             }
-            {habitos !== [] ? habitos.map(({name, days}, index) => 
-            <Box>
-                <span>{name}</span>
-                <ion-icon name="trash-outline"></ion-icon>
-                <BoxDays>
-                    {weekDays.map((day, index) => {
+            {habitos.length !== 0 ? habitos.map(({ name, days, id }, index) =>
+                <Box key={index}>
+                    <span>{name}</span>
+                    <ion-icon name="trash-outline"></ion-icon>
+                    <BoxDays>
+                        {weekDays.map((day, index) => {
 
-                        if(days.includes(index)){
-                            return(<Day backgroundColor="var(--border-color)">{day}</Day>)
-                        } else{
-                            return(<Day backgroundColor="#fff" >{day}</Day>)
-                        }
-                        
-                    })}
-                </BoxDays> 
-            </Box> ): 
-            <p>
-                Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-            </p>}
+                            if (days.includes(index)) {
+                                return (<Day backgroundColor="var(--border-color)">{day}</Day>)
+                            } else {
+                                return (<Day backgroundColor="#fff" >{day}</Day>)
+                            }
+
+                        })}
+                    </BoxDays>
+                </Box>) :
+                <p>
+                    Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
+                </p>}
             <Footer />
         </Container>
     )
@@ -75,6 +133,7 @@ const Container = styled.div`
     height: 100vh;
     color: rgba(0, 0, 0, 0.6);
     font-size: 1.125rem; 
+    overflow: auto;
 `
 
 const MainTop = styled.div`
@@ -139,6 +198,8 @@ const Box = styled.div`
         
         span {
             margin-left: auto;
+            display: flex;
+            align-items: center;
 
             a{
                 font-size: 16px;
@@ -160,7 +221,7 @@ const Box = styled.div`
     }
 `
 
-const BoxDays =  styled.div`
+const BoxDays = styled.div`
     display: flex;
     margin: 10px 0px;
     gap: 5px;
@@ -175,4 +236,8 @@ const Day = styled.div`
     border: 1px solid var(--border-color);
     border-radius: 5px;
     color: ${props => props.backgroundColor === "#fff" ? "var(--border-color)" : "#fff"}
+`
+
+const Button = styled.div`
+    opacity: ${props => props.opacity};
 `

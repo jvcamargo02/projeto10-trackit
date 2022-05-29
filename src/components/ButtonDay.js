@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useState } from 'react';
 
-export default function ButtonDay({ day, index, selectDay, setSelectDay }) {
+export default function ButtonDay({ day, index, selectDay, setSelectDay, disable }) {
 
     const [btnColor, setBtnColor] = useState("#fff");
 
@@ -31,7 +31,7 @@ export default function ButtonDay({ day, index, selectDay, setSelectDay }) {
     return (
 
         <Button>
-            <button
+            <button disabled={disable}
                 key={index}
                 color={btnColor}
                 onClick={() => newHabitDays(index)}>{day}
