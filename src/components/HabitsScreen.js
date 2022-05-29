@@ -26,18 +26,29 @@ export default function HabitsScreen() {
         }
     }
 
-    console.log(habitos)
 
-    useEffect(() => {
+        useEffect(() => {
         const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
         promisse.then(response => setHabitos(response.data))
-    }, []) 
+    }, [])
+
+
+    function removeHabit (id){
+
+        const confirm = window.confirm("Tem certeza que deseja remover este hábito?")
+        
+        if(confirm === true ){
+        const promisse = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config)
+        promisse.then(() => { 
+                const newPromisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
+                newPromisse.then(response => setHabitos(response.data))
+        })} 
+    }
 
     function closeNewHabitBox() {
 
         setToggle(!toggle)
         setSelectDay([])
-        setNewHabit("")
     }
 
     function success() {
@@ -45,6 +56,8 @@ export default function HabitsScreen() {
         setOpacity("100%")
         setButton("Salvar")
         closeNewHabitBox()
+        const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
+        promisse.then(response => setHabitos(response.data))
     }
 
     function error(err) {
@@ -105,7 +118,7 @@ export default function HabitsScreen() {
             {habitos.length !== 0 ? habitos.map(({ name, days, id }, index) =>
                 <Box key={index}>
                     <span>{name}</span>
-                    <ion-icon name="trash-outline"></ion-icon>
+                    <ion-icon onClick={() => removeHabit(id)}name="trash-outline"></ion-icon>
                     <BoxDays>
                         {weekDays.map((day, index) => {
 

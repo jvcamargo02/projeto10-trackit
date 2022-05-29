@@ -13,9 +13,6 @@ export default function TodayScreen() {
     const [habits, setHabits] = useState([])
     const day = dayjs().locale('pt-br').format("dddd, DD/MM");
 
-    console.log(token)
-    console.log(habits)
-
     const config = {
         headers: {
             "Authorization": `Bearer ${token}`
