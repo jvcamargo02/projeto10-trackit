@@ -86,6 +86,8 @@ export default function HabitsScreen() {
 
         } else {
             setDisable('')
+            setOpacity("100%")
+            setButton("Salvar")
             alert("Ops 🤭. Teve um erro ao validar seus dados. Confira se você escolheu um nome e ao menos um dia para seu novo hábito. Que tal tentar novamente?")
         }
 

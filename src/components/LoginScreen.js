@@ -16,11 +16,33 @@ export default function LoginScreen() {
     const [disable, setDisable] = useState("")
     const [opacity, setOpacity] = useState('100%')
     const [button, setButton] = useState('Entrar')
+    const userDataString = localStorage.getItem("userData");
 
-    function success ({data}){
-        setToken(data.token)
-        setPhoto(data.image)
-        navigate('/hoje', { replace: true })
+
+    function teste (){
+        const  userData = JSON.parse(userDataString);
+
+        if(userData !== null){
+            const data = {
+                email: userData.email,
+                password: userData.password
+            }
+            const promisse = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', data)
+            promisse.then((response) => success(response, data))
+            promisse.catch((err) => error(err))
+        }
+
+    }
+    
+
+   /*  userData === null ? null : onSubmit() */
+
+    function success (response, data){
+        const serialData = JSON.stringify(data)
+        localStorage.setItem("userData", serialData)
+        setToken(response.data.token)
+        setPhoto(response.data.image)
+        navigate('/hoje')
     }
 
 
@@ -43,10 +65,12 @@ export default function LoginScreen() {
         }
         
         const promisse = axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login', data)
-        promisse.then((value) => success(value))
+        promisse.then((response) => success(response, data))
         promisse.catch((err) => error(err))
 
     }
+
+    teste()
 
     return (
         <Container>

@@ -1,5 +1,5 @@
 import GlobalStyle from "../styles/global-style";
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom'
 import { useState } from "react";
 import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
@@ -12,6 +12,7 @@ export default function App (){
 
     const [token, setToken] = useState("")
     const [photo, setPhoto] = useState("")
+
 
     return(
         <>
