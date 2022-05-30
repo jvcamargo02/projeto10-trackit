@@ -12,6 +12,7 @@ export default function TodayScreen() {
 
     const { token, checkHabits, habitsNum, setHabitsNum, setCheckHabits } = useContext(UserContext)
     const [habits, setHabits] = useState([])
+    const [titleColor, setTitleColor] = useState('rgba(0,0,0,0.4)')
     const day = dayjs().locale('pt-br').format("dddd, DD/MM");
     let done = 0
 
@@ -39,20 +40,19 @@ export default function TodayScreen() {
     }
 
     return (
-        <Container>
+        <Container checkHabits={checkHabits}>
             <Header />
             <h1>{day.charAt(0).toUpperCase() + day.slice(1)}</h1>
             {checkHabits <= 0 || checkHabits === NaN ?
                 <p>Nenhum hábito concluído ainda</p> :
                 <p>{((checkHabits / habitsNum) * 100).toFixed(2) + "% dos hábitos concluídos"}</p>
             }
-            {/* <p>{habits.len(checkHabits/habitsNum)* 100}</p> */}
             <Habits>
                 {habits.length === 0 ?
 
                     <h4>Nenhum hábito para hoje</h4> :
 
-                    habits.map((habit, index) => <HabitBox key={index} habit={habit} index={index} />)}
+                    habits.map((habit, index) => <HabitBox key={index} habit={habit} />)}
 
             </Habits>
             <Footer />
@@ -78,7 +78,7 @@ const Container = styled.div`
     p{
         font-size: 18px;
         margin-top: 5px;
-        color: rgba(0,0,0,0.4);
+        color: ${props => props.checkHabits === 0 ? "rgba(0,0,0,0.4)" : "#8FC549"};
     }
 `
 

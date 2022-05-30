@@ -3,26 +3,13 @@ import styled from 'styled-components'
 import { useState, useContext, useEffect } from 'react'
 import UserContext from '../contexts/UserContext'
 
-export default function HabitBox({ index, habit }) {
+export default function HabitBox({ habit }) {
 
-    console.log(habit.done)
-    
     const { token, checkHabits, setCheckHabits } = useContext(UserContext)
     const [iconColor, setIconColor] = useState(habit.done === true ? "secondary" : "primary")
     const [habitCurrentSequence, setHabitCurrentSequence] = useState(habit.currentSequence)
     const [habitHighestSequence, setHabitHighestSequence] = useState(habit.highestSequence)
     const [highestSequenceColor, setHighestSequenceColor] = useState(habitHighestSequence === habitCurrentSequence && habitHighestSequence !== 0 ? "#8FC549" : "rgba(0,0,0,0.6)")
-/*     const [teste, setTeste] = useState(habit.done === true ? checkHabits + 1 : checkHabits)
-
-    useEffect(() => {
-        
-        if(habit.done === true){
-            console.log("vou adicionar um no checkHabits")
-            setCheckHabits(checkHabits+1)
-            console.log(checkHabits)
-        }
-
-    }, []) */
     
     const config = {
         headers: {
