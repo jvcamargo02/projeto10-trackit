@@ -1,5 +1,5 @@
 import GlobalStyle from "../styles/global-style";
-import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom'
+import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import { useState } from "react";
 import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
@@ -12,13 +12,15 @@ export default function App (){
 
     const [token, setToken] = useState("")
     const [photo, setPhoto] = useState("")
+    const [habitsNum, setHabitsNum] = useState(0)
+    const [checkHabits, setCheckHabits] = useState(0)
 
 
     return(
         <>
         <GlobalStyle />
         <BrowserRouter>
-        <UserContext.Provider value={{token, setToken, photo, setPhoto}}>
+        <UserContext.Provider value={{token, setToken, photo, setPhoto, habitsNum, setHabitsNum, checkHabits, setCheckHabits}}>
         <Routes>
             <Route path='/' element={<LoginScreen />}/>
             <Route path='/cadastro' element={<RegisterScreen />} />

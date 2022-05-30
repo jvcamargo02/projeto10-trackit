@@ -55,6 +55,7 @@ export default function HabitsScreen() {
         setDisable("")
         setOpacity("100%")
         setButton("Salvar")
+        setNewHabit('')
         closeNewHabitBox()
         const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
         promisse.then(response => setHabitos(response.data))
@@ -125,9 +126,9 @@ export default function HabitsScreen() {
                         {weekDays.map((day, index) => {
 
                             if (days.includes(index)) {
-                                return (<Day backgroundColor="var(--border-color)">{day}</Day>)
+                                return (<Day key={index} backgroundColor="var(--border-color)">{day}</Day>)
                             } else {
-                                return (<Day backgroundColor="#fff" >{day}</Day>)
+                                return (<Day key={index} backgroundColor="#fff" >{day}</Day>)
                             }
 
                         })}
