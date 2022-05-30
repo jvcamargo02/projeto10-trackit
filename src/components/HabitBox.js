@@ -1,17 +1,29 @@
 import axios from 'axios'
 import styled from 'styled-components'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import UserContext from '../contexts/UserContext'
-
 
 export default function HabitBox({ index, habit }) {
 
+    console.log(habit.done)
+    
     const { token, checkHabits, setCheckHabits } = useContext(UserContext)
     const [iconColor, setIconColor] = useState(habit.done === true ? "secondary" : "primary")
     const [habitCurrentSequence, setHabitCurrentSequence] = useState(habit.currentSequence)
     const [habitHighestSequence, setHabitHighestSequence] = useState(habit.highestSequence)
     const [highestSequenceColor, setHighestSequenceColor] = useState(habitHighestSequence === habitCurrentSequence && habitHighestSequence !== 0 ? "#8FC549" : "rgba(0,0,0,0.6)")
+/*     const [teste, setTeste] = useState(habit.done === true ? checkHabits + 1 : checkHabits)
 
+    useEffect(() => {
+        
+        if(habit.done === true){
+            console.log("vou adicionar um no checkHabits")
+            setCheckHabits(checkHabits+1)
+            console.log(checkHabits)
+        }
+
+    }, []) */
+    
     const config = {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -23,7 +35,7 @@ export default function HabitBox({ index, habit }) {
         if(iconColor === "primary"){
             setHabitCurrentSequence(habitCurrentSequence + 1)
             setIconColor("secondary")
-            setCheckHabits(checkHabits + 1)
+            setCheckHabits( checkHabits + 1 )
 
              if(habitHighestSequence <= habitCurrentSequence){
                 setHabitHighestSequence(habitHighestSequence + 1)
@@ -36,7 +48,7 @@ export default function HabitBox({ index, habit }) {
         } else {
             setIconColor("primary")
             setHabitCurrentSequence(habitCurrentSequence - 1)
-            setCheckHabits(checkHabits - 1)
+            setCheckHabits( checkHabits - 1)
 
             if(habitHighestSequence === habitCurrentSequence && habitHighestSequence !== 1){
                 setHighestSequenceColor("#8FC549")

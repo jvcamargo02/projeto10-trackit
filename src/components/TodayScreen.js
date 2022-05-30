@@ -10,9 +10,10 @@ import Header from "./Header";
 
 export default function TodayScreen() {
 
-    const { token, checkHabits, habitsNum, setHabitsNum } = useContext(UserContext)
+    const { token, checkHabits, habitsNum, setHabitsNum, setCheckHabits } = useContext(UserContext)
     const [habits, setHabits] = useState([])
     const day = dayjs().locale('pt-br').format("dddd, DD/MM");
+    let done = 0
 
     const config = {
         headers: {
@@ -22,21 +23,26 @@ export default function TodayScreen() {
 
     useEffect(() => {
         const promisse = axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config)
-        promisse.then(response => printHabits(response.data))
+        promisse.then(response => printHabits(response.data))     
     }, [])
 
-    function printHabits(response) {
+    function printHabits(response) {  
+
         setHabits(response)
         setHabitsNum(response.length)
+        response.map((habit) => {
+            if(habit.done === true){
+                return(done++)
+            }
+        }) 
+        setCheckHabits(done)
     }
-
-    console.log(checkHabits)
 
     return (
         <Container>
             <Header />
             <h1>{day.charAt(0).toUpperCase() + day.slice(1)}</h1>
-            {checkHabits === 0 || checkHabits === NaN ?
+            {checkHabits <= 0 || checkHabits === NaN ?
                 <p>Nenhum hábito concluído ainda</p> :
                 <p>{((checkHabits / habitsNum) * 100).toFixed(2) + "% dos hábitos concluídos"}</p>
             }
